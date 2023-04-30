@@ -3,6 +3,7 @@ import pandas as pd
 import tensorflow as tf
 from scipy import stats
 from shallow_model.randomForest import *
+from deep_model.neuralNetwork import *
 
 
 ADDRESS = 'Put the address to all the images here'
@@ -37,17 +38,15 @@ def train():
     print('====================================================\n')
 
     
+    #============= Shallow Model ===================
     split = (1 - VALIDATIONSPLIT) * xShape[0]
     rfModel(x, y, split, TREEDEPTH)
 
+    #============= Deep Model ======================
     x = np.reshape(x, newshape = (xShape[0], IMAGESIZE, IMAGESIZE)) #reshapes datset to be (#imgs, pixelRow, pixelCol)
     x = tf.data.Dataset.from_tensor_slices(x, y.all())
-    
 
-    trainSet = x.take(split).batch(BATCHSIZE)
-    testSet = x.skip(split).batch(BATCHSIZE)
-
-    return(trainSet, testSet, ybase)
+    neuralNet(x, y, EPOCHCOUNT, BATCHSIZE, VALIDATIONSPLIT)
 
 def fPC(y, yhat):
     return np.mean(np.equal(y, yhat))
