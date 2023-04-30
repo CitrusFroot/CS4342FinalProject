@@ -5,8 +5,6 @@ from scipy import stats
 from shallow_model.randomForest import *
 from deep_model.neuralNetwork import *
 
-
-ADDRESS = 'Put the address to all the images here'
 BATCHSIZE = 64
 TREEDEPTH = 45
 EPOCHCOUNT = 0
@@ -48,6 +46,7 @@ def train():
 
     neuralNet(x, y, EPOCHCOUNT, BATCHSIZE, VALIDATIONSPLIT)
 
+#metric functions
 def fPC(y, yhat):
     return np.mean(np.equal(y, yhat))
 
