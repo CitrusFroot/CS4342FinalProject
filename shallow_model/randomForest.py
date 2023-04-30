@@ -1,16 +1,22 @@
 import numpy as np
 from sklearn.ensemble import _forest as forest
 
-def rfModel(x, y, split):
+def rfModel(x, y, split, depth):
     split = np.int64(split)
     xTr = x[0:split, :]
     xTe = x[split: , :]
     yTr = y[0:split]
     yTe = y[split:]
-    rf = forest.RandomForestClassifier(max_depth= 45)
+    rf = forest.RandomForestClassifier(max_depth= depth)
     rf.fit(xTr, yTr)
+    yhatTr = rf.predict(xTr)
+    yhatTe = rf.predict(xTe)
     print('=======RANDOM FOREST RESULTS:=========')
     print('training accuracy:', rf.score(xTr, yTr))
+    print('training MSE     :', fMSE(yTr, yhatTr))
     print('testing accuracy :', rf.score(xTe, yTe))
+    print('testing MSE      :', fMSE(yTe, yhatTe))
     print('======================================')
 
+def fMSE(y, yhat):
+    return np.mean(np.square(np.subtract(yhat, y)))
