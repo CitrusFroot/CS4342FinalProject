@@ -1,7 +1,6 @@
 import numpy as np
 import pandas as pd
 import tensorflow as tf
-import tensorflow_decision_forests as tfdf
 from scipy import stats
 
 
@@ -27,10 +26,6 @@ def train():
 
     mode = stats.mode(y, keepdims = False)
     ybase = np.repeat(mode, xShape[0])
-
-    model = tfdf.keras.RandomForestModel()
-    model.fit()
-    model.fit()
     
     split = (1 - VALIDATIONSPLIT) * x.cardinality().numpy()
 
@@ -38,6 +33,3 @@ def train():
     testSet = x.skip(split)
 
     return(trainSet, testSet, ybase)
-
-tr, te, yb = train()
-print(tr, te, np.shape(yb), yb[0])
