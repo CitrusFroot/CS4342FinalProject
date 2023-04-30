@@ -20,7 +20,7 @@ def getBaseline():
     categories = np.ndarray.flatten(categories) #flatten to get 1d array rather than 2d; note that they are strings, not ints
     images = np.ndarray.flatten(images) #same as above
 
-    ybase = [] #TODO
+    ybase = np.random.randint(low = 1, high = 20, size = (categories.size, 3)) #TODO: dont use random guess
 
     return(images, categories, ybase)
 
