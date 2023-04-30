@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import tensorflow as tf
 from scipy import stats
+from shallow_model.randomForest import *
 
 
 ADDRESS = 'Put the address to all the images here'
@@ -20,16 +21,18 @@ def getDataset():
 def train():
     x, y = getDataset()
     xShape = np.shape(x)
+    split = (1 - VALIDATIONSPLIT) * xShape[0]
+    yhatShallow = rfModel(x, y, split)
     x = np.reshape(x, newshape = (xShape[0], IMAGESIZE, IMAGESIZE)) #reshapes datset to be (#imgs, pixelRow, pixelCol)
     x = tf.data.Dataset.from_tensor_slices(x, y.all())
-    x = x.batch(BATCHSIZE)
 
     mode = stats.mode(y, keepdims = False)
     ybase = np.repeat(mode, xShape[0])
     
-    split = (1 - VALIDATIONSPLIT) * x.cardinality().numpy()
 
-    trainSet = x.take(split)
-    testSet = x.skip(split)
+    trainSet = x.take(split).batch(BATCHSIZE)
+    testSet = x.skip(split).batch(BATCHSIZE)
 
     return(trainSet, testSet, ybase)
+
+train()
