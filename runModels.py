@@ -1,9 +1,8 @@
 import numpy as np
-import pandas as pd
 import tensorflow as tf
 from scipy import stats
 from shallow_model.randomForest import *
-from deep_model.neuralNetwork import *
+#from deep_model.neuralNetwork import *
 
 BATCHSIZE = 64
 TREEDEPTH = 45
@@ -15,7 +14,7 @@ VALIDATIONSPLIT = 0.3
 #returns: dataset, an nxm matrix where n is the number of images, and m is the number of pixels
 #returns: labels, a column vector of ground truth values for dataset
 def getDataset():
-    dataset = np.loadtxt('Kannada-MNIST\Dig-MNIST.csv', delimiter=',', skiprows = 1) #skip header row
+    dataset = np.loadtxt('Kannada-MNIST/train.csv', delimiter=',', skiprows = 1) #skip header row
     labels = dataset[:, 0] #first column = y
     dataset = dataset[:, 1:] #shape = (#imgs, pixels)
 
