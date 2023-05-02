@@ -42,6 +42,8 @@ def train():
     #============= Deep Model ======================
     x = np.reshape(x, newshape = (xShape[0], IMAGESIZE, IMAGESIZE)) #reshapes datset to be (#imgs, pixelRow, pixelCol)
     x = tf.data.Dataset.from_tensor_slices(x, y.all())
+    x2 = np.reshape(x2, newshape = (np.shape(x2)[0], IMAGESIZE, IMAGESIZE))
+    x2 = tf.data.Dataset.from_tensor_slices(x2, y2.all())
 
     neuralNet(x, y, EPOCHCOUNT, BATCHSIZE, VALIDATIONSPLIT)
 
