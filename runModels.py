@@ -2,7 +2,7 @@ import numpy as np
 import tensorflow as tf
 from scipy import stats
 from shallow_model.randomForest import *
-#from deep_model.neuralNetwork import *
+from deep_model.DeepNN import *
 
 BATCHSIZE = 64
 TREEDEPTH = 50
@@ -40,12 +40,7 @@ def train():
     rfModel(x, y, split, TREEDEPTH, x2, y2)
 
     #============= Deep Model ======================
-    x = np.reshape(x, newshape = (xShape[0], IMAGESIZE, IMAGESIZE)) #reshapes datset to be (#imgs, pixelRow, pixelCol)
-    x = tf.data.Dataset.from_tensor_slices(x, y.all())
-    x2 = np.reshape(x2, newshape = (np.shape(x2)[0], IMAGESIZE, IMAGESIZE))
-    x2 = tf.data.Dataset.from_tensor_slices(x2, y2.all())
-
-    neuralNet(x, y, EPOCHCOUNT, BATCHSIZE, VALIDATIONSPLIT)
+    deepNN()
 
 #metric functions
 def fPC(y, yhat):

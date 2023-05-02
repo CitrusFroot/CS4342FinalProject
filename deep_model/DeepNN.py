@@ -8,25 +8,26 @@ import matplotlib.pyplot as plt
 from sklearn.metrics import r2_score, mean_squared_error
 import pickle
 from sklearn.model_selection import train_test_split
+from keras.utils import plot_model
 
 BATCHSIZE = 32
 EPOCHCOUNT = 30
 IMAGESIZE = 28
 INPUT_SHAPE = [IMAGESIZE, IMAGESIZE, 1]
 
-if __name__ == "__main__":
+def deepNN():
     train_df = pd.read_csv('Kannada-MNIST/train.csv')
-    val_df = pd.read_csv('Kannada-MNIST/Dig-MNIST.csv')
+    dig_df = pd.read_csv('Kannada-MNIST/Dig-MNIST.csv')
 
     train_img = train_df.drop('label', axis=1).values
     train_img = train_img.reshape(-1, IMAGESIZE, IMAGESIZE, 1) / 255.0
-    x_val = val_df.drop('label', axis=1).values
-    x_val = x_val.reshape(-1, IMAGESIZE, IMAGESIZE, 1) / 255.0
-
-    y_train = train_df['label']
-    y_val = val_df['label']
 
     x_train, x_val, y_train, y_val = train_test_split(train_img, train_df['label'])
+
+    x_dig = dig_df.drop('label', axis=1).values
+    x_dig = x_dig.reshape(-1, IMAGESIZE, IMAGESIZE, 1) / 255.0
+
+    y_dig = dig_df['label']
 
     model = Sequential()
     model.add(Conv2D(filters=64, kernel_size=5, padding='same',input_shape=INPUT_SHAPE, activation='relu'))
@@ -49,7 +50,7 @@ if __name__ == "__main__":
     earlystopping = callbacks.EarlyStopping(monitor="accuracy", mode="max", patience=5, restore_best_weights=True)
 
     #*********************Train and save the model***************#
-    # model.compile(optimizer=tf.keras.optimizers.Adam(), loss=tf.keras.losses.SparseCategoricalCrossentropy(), metrics=['accuracy'])
+    # model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
     # hist = model.fit(x_train, y_train, epochs=EPOCHCOUNT, batch_size=BATCHSIZE, validation_data=(x_val, y_val), callbacks=[earlystopping])
 
     # model.save("Deep Learning model")
@@ -63,8 +64,9 @@ if __name__ == "__main__":
     with open('deep_model/deepNNHistory', "rb") as file_pi:
         hist = pickle.load(file_pi)
     
+    # model.summary()
 
-    model.summary()
+    plot_model(model, to_file="deep_model/Deep_NN_Model.png", show_shapes=True)
 
     pred_train = np.argmax(model.predict(x_train), axis=1)
     r2_score_train = r2_score(y_train, pred_train)
@@ -74,24 +76,32 @@ if __name__ == "__main__":
     r2_score_val = r2_score(y_val, pred_val)
     mse_score_val = mean_squared_error(y_val, pred_val)
 
-    print("Training R2_score Acc: {}".format(round(r2_score_train, 4)))
+    pred_dig = np.argmax(model.predict(x_dig), axis=1)
+    r2_score_dig = r2_score(y_dig, pred_dig)
+    mse_score_dig = mean_squared_error(y_dig, pred_dig)
+
+    print('=======DEEP NN RESULTS:=========')
+    print("Training Acc: {}".format(round(r2_score_train, 4)))
     print("Training MSE: {}".format(round(mse_score_train, 4)))
-    print("Validation R2_score Acc: {}".format(round(r2_score_val, 4)))
+    print("Validation Acc: {}".format(round(r2_score_val, 4)))
     print("Validation MSE: {}".format(round(mse_score_val, 4)))
+    print("Dig Acc: {}".format(round(r2_score_dig, 4)))
+    print("Dig MSE: {}".format(round(mse_score_dig, 4)))
+    print('======================================')
 
-    acc = hist['accuracy']
-    val_acc = hist['val_accuracy']
+    # acc = hist['accuracy']
+    # val_acc = hist['val_accuracy']
 
-    epochs = range(1, len(acc) + 1)
+    # epochs = range(1, len(acc) + 1)
 
-    plt.plot(epochs, acc, '-', label='Training Acc')
-    plt.plot(epochs, val_acc, ':', label='Validation Acc')
-    plt.title('Training and Validation Accuracy')
-    plt.xlabel('Epoch')
-    plt.ylabel('Accuracy')
-    plt.legend(loc='lower right')
-    plt.plot()
-    plt.show()
+    # plt.plot(epochs, acc, '-', label='Training Acc')
+    # plt.plot(epochs, val_acc, ':', label='Validation Acc')
+    # plt.title('Training and Validation Accuracy')
+    # plt.xlabel('Epoch')
+    # plt.ylabel('Accuracy')
+    # plt.legend(loc='lower right')
+    # plt.plot()
+    # plt.show()
 
     #***************Write Submission file************#
     # test_df = pd.read_csv('Kannada-MNIST/test.csv')
