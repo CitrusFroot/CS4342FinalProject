@@ -13,8 +13,8 @@ VALIDATIONSPLIT = 0.3
 #Loads the dataset from the csv files
 #returns: dataset, an nxm matrix where n is the number of images, and m is the number of pixels
 #returns: labels, a column vector of ground truth values for dataset
-def getDataset():
-    dataset = np.loadtxt('Kannada-MNIST/train.csv', delimiter=',', skiprows = 1) #skip header row
+def getDataset(address):
+    dataset = np.loadtxt(address, delimiter=',', skiprows = 1) #skip header row
     labels = dataset[:, 0] #first column = y
     dataset = dataset[:, 1:] #shape = (#imgs, pixels)
 
@@ -22,8 +22,9 @@ def getDataset():
 
 #driver function that runs both models on the data
 def train():
-    x, y = getDataset()
+    x, y = getDataset('Kannada-MNIST/train.csv')
     print('Dataset loaded.')
+    x2, y2 = getDataset('Kannada-MNIST/Dig-MNIST.csv')
 
     xShape = np.shape(x)
     mode = stats.mode(y, keepdims = False).mode
@@ -36,8 +37,13 @@ def train():
 
     
     #============= Shallow Model ===================
+    print('Train.csv results')
     split = (1 - VALIDATIONSPLIT) * xShape[0]
     rfModel(x, y, split, TREEDEPTH)
+
+    print('Dig-MNIST.csv results')
+    rfModel(x2, y2, split, TREEDEPTH)
+
 
     #============= Deep Model ======================
     x = np.reshape(x, newshape = (xShape[0], IMAGESIZE, IMAGESIZE)) #reshapes datset to be (#imgs, pixelRow, pixelCol)
