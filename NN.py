@@ -69,41 +69,39 @@ if __name__ == "__main__":
     model = Sequential()
     model.add(GaussianNoise(0.01, input_dim=x.shape[1]))
 
-
-    # model.add(Dense(256, activation='elu', kernel_regularizer=regularizers.l1(0.001)))#, input_dim=x.shape[1]))
     # # model.add(GaussianNoise(0.1))
     # model.add(Dropout(0.2))
-    model.add(Dense(128, kernel_regularizer=regularizers.l2(0.0008), activation='elu'))
+    model.add(Dense(128, kernel_regularizer=regularizers.l2(0.001), activation='elu'))
     model.add(Dropout(0.1))
     model.add(BatchNormalization())
     model.add(LeakyReLU(alpha=0.5))
 
-    model.add(Dense(64, kernel_regularizer=regularizers.l2(0.0008), activation='elu'))
-    model.add(Dropout(0.1))
-    model.add(BatchNormalization())
-    model.add(LeakyReLU(alpha=0.5))
-    model.add(Flatten())
-
-    model.add(Dense(32, kernel_regularizer=regularizers.l2(0.0008), activation='elu'))
-    model.add(Dropout(0.1))
-    model.add(BatchNormalization())
-    model.add(Flatten())
-    model.add(LeakyReLU(alpha=0.5))
-
-
-    model.add(Dense(16, kernel_regularizer=regularizers.l2(0.0008), activation='elu'))
+    model.add(Dense(64, kernel_regularizer=regularizers.l2(0.001), activation='elu'))
     model.add(Dropout(0.1))
     model.add(BatchNormalization())
     model.add(LeakyReLU(alpha=0.5))
     model.add(Flatten())
 
-    model.add(Dense(8, kernel_regularizer=regularizers.l2(0.0008), activation='elu'))
+    model.add(Dense(32, kernel_regularizer=regularizers.l2(0.001), activation='elu'))
+    model.add(Dropout(0.1))
+    model.add(BatchNormalization())
+    model.add(Flatten())
+    model.add(LeakyReLU(alpha=0.5))
+
+
+    model.add(Dense(16, kernel_regularizer=regularizers.l2(0.001), activation='elu'))
+    model.add(Dropout(0.1))
+    model.add(BatchNormalization())
+    model.add(LeakyReLU(alpha=0.5))
+    model.add(Flatten())
+
+    model.add(Dense(8, kernel_regularizer=regularizers.l2(0.001), activation='elu'))
     model.add(Dropout(0.1))
     model.add(BatchNormalization())
     model.add(LeakyReLU(alpha=0.5))
 
 
-    model.add(Dense(4, kernel_regularizer=regularizers.l2(0.0008), activation='elu'))
+    model.add(Dense(4, kernel_regularizer=regularizers.l2(0.001), activation='elu'))
     model.add(Dropout(0.1))
     model.add(BatchNormalization())
 
