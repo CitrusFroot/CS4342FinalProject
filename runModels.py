@@ -5,7 +5,7 @@ from shallow_model.randomForest import *
 #from deep_model.neuralNetwork import *
 
 BATCHSIZE = 64
-TREEDEPTH = 45
+TREEDEPTH = 50
 EPOCHCOUNT = 0
 IMAGESIZE = 28
 VALIDATIONSPLIT = 0.3
@@ -23,27 +23,21 @@ def getDataset(address):
 #driver function that runs both models on the data
 def train():
     x, y = getDataset('Kannada-MNIST/train.csv')
-    print('Dataset loaded.')
     x2, y2 = getDataset('Kannada-MNIST/Dig-MNIST.csv')
+    print('Datasets loaded.')
 
     xShape = np.shape(x)
     mode = stats.mode(y, keepdims = False).mode
-    print(mode)
     ybase = np.repeat(mode, xShape[0])
     print('=========== Baseline Accuracy and loss =============')
     print('baseline accuracy:', fPC(y, ybase))
     print('baseline MSE     :', fMSE(y, ybase))
     print('====================================================\n')
 
-    
     #============= Shallow Model ===================
     print('Train.csv results')
     split = (1 - VALIDATIONSPLIT) * xShape[0]
-    rfModel(x, y, split, TREEDEPTH)
-
-    print('Dig-MNIST.csv results')
-    rfModel(x2, y2, split, TREEDEPTH)
-
+    rfModel(x, y, split, TREEDEPTH, x2, y2)
 
     #============= Deep Model ======================
     x = np.reshape(x, newshape = (xShape[0], IMAGESIZE, IMAGESIZE)) #reshapes datset to be (#imgs, pixelRow, pixelCol)
