@@ -66,8 +66,6 @@ if __name__ == "__main__":
 
     model.summary()
 
-    
-
     pred_train = np.argmax(model.predict(x_train), axis=1)
     r2_score_train = r2_score(y_train, pred_train)
     mse_score_train = mean_squared_error(y_train, pred_train)
