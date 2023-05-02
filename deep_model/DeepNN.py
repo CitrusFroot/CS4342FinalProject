@@ -59,8 +59,8 @@ if __name__ == "__main__":
     
 
     #***************Load up saved model and history************#
-    model = models.load_model('Deep Learning model')
-    with open('deepNNHistory', "rb") as file_pi:
+    model = models.load_model('deep_model/Deep Learning model')
+    with open('deep_model/deepNNHistory', "rb") as file_pi:
         hist = pickle.load(file_pi)
     
 
@@ -102,6 +102,6 @@ if __name__ == "__main__":
 
     # submission = np.column_stack((np.array(id), preds))
     # submission = submission.astype(int)
-    # np.savetxt('submission.csv', submission, delimiter=',', header='id,label', comments='', fmt='%i')
+    # np.savetxt('deepNNsubmission.csv', submission, delimiter=',', header='id,label', comments='', fmt='%i')
 
     
