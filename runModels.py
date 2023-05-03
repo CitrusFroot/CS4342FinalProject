@@ -1,12 +1,25 @@
 import numpy as np
+<<<<<<< HEAD
 from scipy import stats
+=======
+import tensorflow as tf
+from scipy.stats import mode as smode
+>>>>>>> 23cbaa2 (stuff)
 from shallow_model.randomForest import *
 from deep_model.DeepNN import *
 from neural_network_model.three_layer_NN import *
 
+<<<<<<< HEAD
 BATCHSIZE = 32
 TREEDEPTH = 50
 EPOCHCOUNT = 20
+=======
+#hyperparameters
+BATCHSIZE = 64
+TREEDEPTH = 50
+NUMESTIMATORS = 100
+EPOCHCOUNT = 0
+>>>>>>> 23cbaa2 (stuff)
 IMAGESIZE = 28
 VALIDATIONSPLIT = 0.3
 
@@ -26,8 +39,9 @@ def train():
     x2, y2 = getDataset('Kannada-MNIST/Dig-MNIST.csv')
     print('Datasets loaded.')
 
+    #constructs the baseline accuracy check
     xShape = np.shape(x)
-    mode = stats.mode(y, keepdims = False).mode
+    mode = smode(y, keepdims = False).mode 
     ybase = np.repeat(mode, xShape[0])
     print('=========== Baseline Accuracy and loss =============')
     print('baseline accuracy:', fPC(y, ybase))
@@ -35,8 +49,14 @@ def train():
     print('====================================================\n')
 
     #============= Shallow Model ===================
+<<<<<<< HEAD
     '''split = (1 - VALIDATIONSPLIT) * xShape[0]
     rfModel(x, y, split, TREEDEPTH, x2, y2)'''
+=======
+    print('Train.csv results')
+    split = (1 - VALIDATIONSPLIT) * xShape[0]
+    rfModel(x, y, split, TREEDEPTH, NUMESTIMATORS, x2, y2) #runs random forest on training data
+>>>>>>> 23cbaa2 (stuff)
 
     #============= Deep Model ======================
     #deepNN()
@@ -53,3 +73,4 @@ def fMSE(y, yhat):
     return np.mean(np.square(np.subtract(yhat, y)))
 
 train()
+visualizeRF()
