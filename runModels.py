@@ -3,6 +3,7 @@ import tensorflow as tf
 from scipy import stats
 from shallow_model.randomForest import *
 from deep_model.DeepNN import *
+from neural_network_model.three_layer_NN import *
 
 BATCHSIZE = 64
 TREEDEPTH = 50
@@ -41,6 +42,10 @@ def train():
 
     #============= Deep Model ======================
     deepNN()
+
+    #======== 3-Layer Neural Network Model =========
+    three_layer_NN()
+
 
 #metric functions
 def fPC(y, yhat):

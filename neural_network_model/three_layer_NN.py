@@ -73,7 +73,7 @@ def convertGroundTruth(yhat):
     return output
 
 
-if __name__ == "__main__":
+def three_layer_NN():
 
     # --- Get all datasets -- #
     x, y = getTrainSet()
