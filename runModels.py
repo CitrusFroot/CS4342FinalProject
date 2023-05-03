@@ -4,11 +4,11 @@ from shallow_model.randomForest import *
 from deep_model.DeepNN import *
 from neural_network_model.three_layer_NN import *
 
-#Hyperparameters
+#hyperparameters
 BATCHSIZE = 32
 TREEDEPTH = 50
-EPOCHCOUNT = 20
 NUMESTIMATORS = 100
+EPOCHCOUNT = 20
 IMAGESIZE = 28
 VALIDATIONSPLIT = 0.3
 
@@ -39,13 +39,15 @@ def train():
 
     #============= Shallow Model ===================
     split = (1 - VALIDATIONSPLIT) * xShape[0]
-    rfModel(x, y, split, TREEDEPTH, NUMESTIMATORS, x2, y2) #runs random forest on training data
-
-    #============= Deep Model ======================
-    #deepNN()
+    #rfModel(x, y, split, TREEDEPTH, NUMESTIMATORS, x2, y2) #runs random forest on training data
 
     #======== 3-Layer Neural Network Model =========
-    three_layer_NN(BATCHSIZE, EPOCHCOUNT, VALIDATIONSPLIT, (x, y, x2, y2))
+    #three_layer_NN(BATCHSIZE, EPOCHCOUNT, VALIDATIONSPLIT, (x, y, x2, y2))
+
+    #============= Deep Model ======================
+    deepNN(BATCHSIZE, EPOCHCOUNT, VALIDATIONSPLIT, (x, y, x2, y2))
+
+    
 
 
 #metric functions
