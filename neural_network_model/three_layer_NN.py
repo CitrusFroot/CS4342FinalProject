@@ -12,7 +12,7 @@ import pickle
 
 ADDRESS = 'Put the address to all the images here'
 BATCHSIZE = 32
-EPOCHCOUNT = 1
+EPOCHCOUNT = 20
 IMAGESIZE = 28
 VALIDATIONSPLIT = 0.1   
 CLASSCOUNT = 10
