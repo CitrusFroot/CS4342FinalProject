@@ -12,13 +12,13 @@ import pickle
 
 ADDRESS = 'Put the address to all the images here'
 BATCHSIZE = 32
-EPOCHCOUNT = 20
+EPOCHCOUNT = 1
 IMAGESIZE = 28
 VALIDATIONSPLIT = 0.1   
 CLASSCOUNT = 10
 INPUT_SHAPE = [IMAGESIZE, IMAGESIZE, 1]
 
-def getDigset():
+def getDigSet():
     dataset = np.loadtxt('CS4342FinalProject/Kannada-MNIST/Dig-MNIST.csv', delimiter=',', skiprows = 1)
     labels = dataset[:, 0] #first column = y
     dataset = dataset[:, 1:] #shape = (#imgs, pixels)
@@ -27,7 +27,8 @@ def getDigset():
     dataset = dataset.reshape(-1, IMAGESIZE, IMAGESIZE, 1) / 255.0     
 
     # load pre-categorized labels
-    labels = np.loadtxt('val_y_labels.csv')
+    # labels = np.loadtxt('val_y_labels.csv')
+    labels = oneHotEncoding(labels)
 
     return dataset, labels
 
@@ -40,7 +41,8 @@ def getTrainSet():
     dataset = dataset.reshape(-1, IMAGESIZE, IMAGESIZE, 1) / 255.0    
 
     # load pre-categorized labels
-    labels = np.loadtxt('y_labels.csv')
+    # labels = np.loadtxt('y_labels.csv')
+    labels = oneHotEncoding(labels)
     
     return dataset, labels
 
@@ -57,10 +59,11 @@ def getTestSet():
 # Convert Categorical Value to One-Hot encoding 
 def oneHotEncoding(y):
     m = np.shape(y)[0]
+    print('m = ', m)
     output = np.zeros((m, 10))
     for r in range(0, m):
-        maxind = np.argmax(y[r,:])
-        output[r, maxind] = 1
+        index = (int)(y[r])
+        output[r, index] = 1
     return output
 
 # Convert One-Hot encoding to Categorical Value
@@ -78,6 +81,7 @@ def three_layer_NN():
     # --- Get all datasets -- #
     x, y = getTrainSet()
     test_x, test_id = getTestSet()
+    dig_x, dig_y = getDigSet()
 
     x_train, x_val, y_train, y_val = train_test_split(x, y)
 
@@ -108,10 +112,24 @@ def three_layer_NN():
     r2_score_train = r2_score(y_train, yhat)
     mse_score_train = mean_squared_error(y_train, yhat)
 
+    print('r2_score_train = ', r2_score_train)
+    print('mse_score_train = ', mse_score_train)
+
     # validation set
     yhat_val = model.predict(x_val)
     r2_score_val = r2_score(y_val, yhat_val)
     mse_score_val = mean_squared_error(y_val, yhat_val)
+
+    print('r2_score_val = ', r2_score_val)
+    print('mse_score_val = ', mse_score_val)
+
+    # dig set
+    yhat_dig = model.predict(dig_x)
+    r2_score_dig = r2_score(dig_y, yhat_dig)
+    mse_score_dig = mean_squared_error(dig_y, yhat_dig)
+
+    print('r2_score_dig = ', r2_score_dig)
+    print('mse_score_dig = ', mse_score_dig)
 
     # --- Plotting --- #
     err = hist.history['accuracy']
@@ -128,7 +146,7 @@ def three_layer_NN():
     plt.plot()
     plt.show()
 
-    test_y = oneHotEncoding(model.predict(test_x))
+    test_y = model.predict(test_x)
     prediction = convertGroundTruth(test_y)
 
     # --- Converting to CSV for Kaggle Submission --- #
@@ -165,9 +183,6 @@ def three_layer_NN():
 
     # conv2d w/ reLu (final)
     # epoch = 20; conv2d = 64; batchsSize = 32; training accuracy = 0.9973 ; validation accuracy = 0.9988
-
-
-
 
 
     
