@@ -1,13 +1,12 @@
 import numpy as np
-import tensorflow as tf
 from scipy import stats
 from shallow_model.randomForest import *
 from deep_model.DeepNN import *
 from neural_network_model.three_layer_NN import *
 
-BATCHSIZE = 64
+BATCHSIZE = 32
 TREEDEPTH = 50
-EPOCHCOUNT = 0
+EPOCHCOUNT = 20
 IMAGESIZE = 28
 VALIDATIONSPLIT = 0.3
 
@@ -36,15 +35,14 @@ def train():
     print('====================================================\n')
 
     #============= Shallow Model ===================
-    print('Train.csv results')
-    split = (1 - VALIDATIONSPLIT) * xShape[0]
-    rfModel(x, y, split, TREEDEPTH, x2, y2)
+    '''split = (1 - VALIDATIONSPLIT) * xShape[0]
+    rfModel(x, y, split, TREEDEPTH, x2, y2)'''
 
     #============= Deep Model ======================
-    deepNN()
+    #deepNN()
 
     #======== 3-Layer Neural Network Model =========
-    three_layer_NN()
+    three_layer_NN(BATCHSIZE, EPOCHCOUNT, VALIDATIONSPLIT, (x, y, x2, y2))
 
 
 #metric functions

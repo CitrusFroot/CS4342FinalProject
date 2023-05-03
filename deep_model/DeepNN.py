@@ -2,32 +2,22 @@ from keras.models import Sequential
 from keras.layers import Dense, Dropout, Conv2D, MaxPool2D, Flatten, BatchNormalization, Flatten
 from keras import callbacks, models
 import numpy as np
-import pandas as pd
-import tensorflow as tf
 import matplotlib.pyplot as plt
 from sklearn.metrics import r2_score, mean_squared_error
 import pickle
 from sklearn.model_selection import train_test_split
 from keras.utils import plot_model
 
-BATCHSIZE = 32
-EPOCHCOUNT = 30
 IMAGESIZE = 28
 INPUT_SHAPE = [IMAGESIZE, IMAGESIZE, 1]
 
-def deepNN():
-    train_df = pd.read_csv('Kannada-MNIST/train.csv')
-    dig_df = pd.read_csv('Kannada-MNIST/Dig-MNIST.csv')
+def deepNN(batchSize, epochCount, validationSplit, data): #32, 30
+    x = data[0].reshape(-1, IMAGESIZE, IMAGESIZE, 1) / 255.0
+    y = data[1]
+    x_dig = data[2].reshape(-1, IMAGESIZE, IMAGESIZE, 1) / 255.0
+    y_dig = data[3]
 
-    train_img = train_df.drop('label', axis=1).values
-    train_img = train_img.reshape(-1, IMAGESIZE, IMAGESIZE, 1) / 255.0
-
-    x_train, x_val, y_train, y_val = train_test_split(train_img, train_df['label'])
-
-    x_dig = dig_df.drop('label', axis=1).values
-    x_dig = x_dig.reshape(-1, IMAGESIZE, IMAGESIZE, 1) / 255.0
-
-    y_dig = dig_df['label']
+    x_train, x_val, y_train, y_val = train_test_split(x, y, test_size = validationSplit)
 
     model = Sequential()
     model.add(Conv2D(filters=64, kernel_size=5, padding='same',input_shape=INPUT_SHAPE, activation='relu'))
@@ -50,13 +40,13 @@ def deepNN():
     earlystopping = callbacks.EarlyStopping(monitor="accuracy", mode="max", patience=5, restore_best_weights=True)
 
     #*********************Train and save the model***************#
-    # model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
-    # hist = model.fit(x_train, y_train, epochs=EPOCHCOUNT, batch_size=BATCHSIZE, validation_data=(x_val, y_val), callbacks=[earlystopping])
+    model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+    hist = model.fit(x_train, y_train, epochs=epochCount, batch_size=batchSize, validation_data=(x_val, y_val), callbacks=[earlystopping])
 
-    # model.save("Deep Learning model")
+    model.save("Deep Learning model")
 
-    # with open('deepNNHistory', 'wb') as file_pi:
-    #     pickle.dump(hist.history, file_pi)
+    with open('deepNNHistory', 'wb') as file_pi:
+         pickle.dump(hist.history, file_pi)
     
 
     #***************Load up saved model and history************#

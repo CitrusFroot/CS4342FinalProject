@@ -1,9 +1,8 @@
 import numpy as np
-import pandas as pd
 import matplotlib.pyplot as plt
 
 # Load the data
-dataset = np.loadtxt('/Users/sandraphan3/Downloads/Kannada-MNIST/Dig-MNIST.csv', delimiter=',', skiprows=1)
+dataset = np.loadtxt('Kannada-MNIST/Dig-MNIST.csv', delimiter=',', skiprows=1)
 labels = dataset[:, 0]  # first column = y
 dataset = dataset[:, 1:]  # shape = (#imgs, pixels)
 

@@ -1,25 +1,18 @@
 from keras.models import Sequential
 from keras.layers import Dense, Conv2D, MaxPool2D, Flatten
-from keras import callbacks, models
+from keras import callbacks
 import numpy as np
-import tensorflow as tf
 import matplotlib.pyplot as plt
 from sklearn.metrics import r2_score, mean_squared_error
-from keras.utils import to_categorical
 from sklearn.model_selection import train_test_split
-import pickle
 
 
-ADDRESS = 'Put the address to all the images here'
-BATCHSIZE = 32
-EPOCHCOUNT = 20
 IMAGESIZE = 28
-VALIDATIONSPLIT = 0.1   
 CLASSCOUNT = 10
 INPUT_SHAPE = [IMAGESIZE, IMAGESIZE, 1]
 
 def getDigSet():
-    dataset = np.loadtxt('CS4342FinalProject/Kannada-MNIST/Dig-MNIST.csv', delimiter=',', skiprows = 1)
+    dataset = np.loadtxt('Kannada-MNIST/Dig-MNIST.csv', delimiter=',', skiprows = 1)
     labels = dataset[:, 0] #first column = y
     dataset = dataset[:, 1:] #shape = (#imgs, pixels)
     
@@ -32,28 +25,14 @@ def getDigSet():
 
     return dataset, labels
 
-def getTrainSet():
-    dataset = np.loadtxt('CS4342FinalProject/Kannada-MNIST/train.csv', delimiter=',', skiprows = 1)
-    labels = dataset[:, 0] #first column = y
-    dataset = dataset[:, 1:] #shape = (#imgs, pixels)
-    
-    # normalize image pixel
-    dataset = dataset.reshape(-1, IMAGESIZE, IMAGESIZE, 1) / 255.0    
-
-    # load pre-categorized labels
-    # labels = np.loadtxt('y_labels.csv')
-    labels = oneHotEncoding(labels)
-    
-    return dataset, labels
-
 def getTestSet():
-    dataset = np.loadtxt('CS4342FinalProject/Kannada-MNIST/test.csv', delimiter=',', skiprows = 1)
+    dataset = np.loadtxt('Kannada-MNIST/test.csv', delimiter=',', skiprows = 1)
     id = dataset[:, 0] #first column = y
     dataset = dataset[:, 1:] #shape = (#imgs, pixels)
-
+    
     # normalize image pixel
     dataset = dataset.reshape(-1, IMAGESIZE, IMAGESIZE, 1) / 255.0    
-
+    
     return dataset, id
 
 # Convert Categorical Value to One-Hot encoding 
@@ -76,14 +55,17 @@ def convertGroundTruth(yhat):
     return output
 
 
-def three_layer_NN():
+def three_layer_NN(batchSize, epochCount, validationSplit, data):
 
     # --- Get all datasets -- #
-    x, y = getTrainSet()
-    test_x, test_id = getTestSet()
-    dig_x, dig_y = getDigSet()
+    x = data[0].reshape(-1, IMAGESIZE, IMAGESIZE, 1)/255.0 # normalize image pixel
+    y = oneHotEncoding(data[1])
+    dig_x = data[2].reshape(-1, IMAGESIZE, IMAGESIZE, 1)/255.0 # normalize image pixel
+    dig_y = oneHotEncoding(data[3])
 
-    x_train, x_val, y_train, y_val = train_test_split(x, y)
+    x_train, x_val, y_train, y_val = train_test_split(x, y, test_size = validationSplit)
+    
+    test_x, id = getTestSet()
 
     # --- Build Sequential Model --- #
 
@@ -100,7 +82,7 @@ def three_layer_NN():
         # hist = pickle.load(file_pi)
     
     earlystopping = callbacks.EarlyStopping(monitor="val_loss", mode="min", patience=5, restore_best_weights=True)
-    hist = model.fit(x_train, y_train, epochs=EPOCHCOUNT, batch_size=BATCHSIZE, validation_data=(x_val, y_val), callbacks=[earlystopping], shuffle=True)
+    hist = model.fit(x_train, y_train, epochs=epochCount, batch_size=batchSize, validation_data=(x_val, y_val), callbacks=[earlystopping], shuffle=True)
 
 
     model.summary()
