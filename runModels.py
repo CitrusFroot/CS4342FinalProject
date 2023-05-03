@@ -39,10 +39,10 @@ def train():
 
     #============= Shallow Model ===================
     split = (1 - VALIDATIONSPLIT) * xShape[0]
-    #rfModel(x, y, split, TREEDEPTH, NUMESTIMATORS, x2, y2) #runs random forest on training data
+    rfModel(x, y, split, TREEDEPTH, NUMESTIMATORS, x2, y2) #runs random forest on training data
 
     #======== 3-Layer Neural Network Model =========
-    #three_layer_NN(BATCHSIZE, EPOCHCOUNT, VALIDATIONSPLIT, (x, y, x2, y2))
+    three_layer_NN(BATCHSIZE, EPOCHCOUNT, VALIDATIONSPLIT, (x, y, x2, y2))
 
     #============= Deep Model ======================
     deepNN(BATCHSIZE, EPOCHCOUNT, VALIDATIONSPLIT, (x, y, x2, y2))
